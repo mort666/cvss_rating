@@ -10,7 +10,7 @@ Gem::Specification.new do |spec|
   spec.email         = ["mort666@virus.org"]
   spec.summary       = %q{CVSS Risk Rating Calucation and Vector parsing}
   spec.description   = %q{CVSS Risk Rating Calucation and Vector parsing, implements CVSS 2.0 rating}
-  spec.homepage      = "http://virus.org"
+  spec.homepage      = "https://github.com/mort666/cvss_rating"
   spec.license       = "MIT"
 
   spec.files         = `git ls-files -z`.split("\x0")
