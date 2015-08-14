@@ -387,9 +387,9 @@ module Cvss
 	    printf "Base Score:\t\t\t%3.1f\n", @base
 	    printf "  Impact Subscore:\t\t%3.1f\n", @impact
 	    printf "  Exploitability Subscore:\t%3.1f\n", @exploitability
-	    printf "Temporal Score:\t\t\t%3.1f\n", @temporal if !self.notemporal?
-	    printf "Environmental Score:\t\t%3.1f\n", @environmental  if !self.noenvironmental?
-	    printf "  Adjusted Impact Score:\t%3.1f\n", @adjimpact if !self.noenvironmental?
+	    printf "Temporal Score:\t\t\t%3.1f\n", @temporal if !notemporal?
+	    printf "Environmental Score:\t\t%3.1f\n", @environmental  if !noenvironmental?
+	    printf "  Adjusted Impact Score:\t%3.1f\n", @adjimpact if !noenvironmental?
 	    printf "Overall Score:\t\t\t%3.1f\n", overallscore
 	  end
 	  
