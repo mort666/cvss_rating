@@ -37,7 +37,6 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 
 		assert_equal @cvss.overallscore, cvss.overallscore
 
-		cvss.init
 		cvss.parse("AV:L/AC:M/Au:M/C:P/I:C/A:C/CDP:L/TD:H/CR:M/IR:M/AR:M")
 		assert_equal @cvss_2.key, cvss.key
 
@@ -48,7 +47,6 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 
 	def test_cvss_rating_parameters
 		cvss = Cvss::Rating.new
-		cvss.init
 
 		cvss.av = "local"
 
@@ -57,5 +55,15 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 		cvss.cdp = 'low'
 
 		assert_equal @cvss_2.cdp, cvss.cdp
+	end
+
+	def test_cvss_rating_scores
+		cvss = Cvss::Rating.new
+
+		cvss.scores("N", "M", "N", "P", "P", "P")
+		assert_equal @cvss.key, cvss.key
+
+		cvss.scores("L", "M", "M", "P", "C", "C", "ND", "ND", "ND", "L", "H",  "M", "M",  "M")
+		assert_equal @cvss_2.key, cvss.key
 	end
 end

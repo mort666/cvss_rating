@@ -44,18 +44,28 @@ module Cvss
 	  COLLATERAL_DAMAGE_KEY = { :none => 'N', :low => 'L', :low_medium => 'LM', :medium_high => 'MH', :high => 'H', :notdefined => 'ND' }
 	  TARGET_DISTRIBUTION_KEY = { :none => 'N', :low => 'L', :medium => 'M', :high => 'H', :notdefined => 'ND' }	  
 
-	  def initialize(attributes = {})   
-	    @base = nil 
-	    @temporal = nil 
-	    @environmental = nil 
-	    
-	    self.init
+	private
 
-	    attributes.each do |name, value|
-	      send("#{name}=", value)
+	  def impactfunction(impact)
+	  	return impact != 0 ? 1.176 : 0.0
+	  end
+
+	  def noenvironmental?
+	    if get_key("COLLATERAL_DAMAGE", @cdp) == "ND" && get_key("TARGET_DISTRIBUTION", @td) == "ND" && get_key("CONFIDENTIALITY_REQUIREMENT", @cr) == "ND" && get_key("INTEGRITY_REQUIREMENT", @ir) == "ND" && get_key("AVAILABILITY_REQUIREMENT", @ar) == "ND"
+	      return true
+	    else
+	      return false
 	    end
 	  end
 	  
+	  def notemporal?
+	    if get_key("EXPLOITABILITY", @ex) == "ND" && get_key("REMEDIATION_LEVEL", @rl) == "ND" && get_key("REPORT_CONFIDENCE", @rc) == "ND"
+	      return true
+	    else
+	      return false
+	    end
+	  end
+
 	  def init(ex = "ND", rl = "ND", rc = "ND", cd = "ND", td = "ND", cr = "ND", ir = "ND", ar = "ND")
 	    self.ex = ex
 	    self.rl = rl
@@ -67,8 +77,22 @@ module Cvss
 		self.ir = ir
 	    self.ar = ar
 	  end
+
+	public
+
+	  def initialize(attributes = {})   
+	    @base = nil 
+	    @temporal = nil 
+	    @environmental = nil 
+	    
+	    init
+
+	    attributes.each do |name, value|
+	      send("#{name}=", value)
+	    end
+	  end
 	  
-	  def scores(av, ac, au, ci, ii, ai, ex = "ND", rl = "ND", rc = "ND", cd = "ND", td = "ND", cr = "ND", ir = "ND", ar = "ND")
+	  def scores(av, ac, au, ci, ii, ai, ex = "ND", rl = "ND", rc = "ND", cdp = "ND", td = "ND", cr = "ND", ir = "ND", ar = "ND")
 	    self.av = av
 	    self.ac = ac
 	    self.au = au
@@ -80,7 +104,7 @@ module Cvss
 	    self.rl = rl
 	    self.rc = rc
 
-	    self.cd = cd
+	    self.cdp = cdp
 		self.td = td
 		self.cr = cr
 		self.ir = ir
@@ -91,22 +115,6 @@ module Cvss
 	    get_key = eval(vector + "_KEY")[(eval(vector).select { |k,v| v == value }).keys[0]]
 	  end
 	  
-	  def noenvironmental
-	    if get_key("COLLATERAL_DAMAGE", @cdp) == "ND" && get_key("TARGET_DISTRIBUTION", @td) == "ND" && get_key("CONFIDENTIALITY_REQUIREMENT", @cr) == "ND" && get_key("INTEGRITY_REQUIREMENT", @ir) == "ND" && get_key("AVAILABILITY_REQUIREMENT", @ar) == "ND"
-	      return true
-	    else
-	      return false
-	    end
-	  end
-	  
-	  def notemporal
-	    if get_key("EXPLOITABILITY", @ex) == "ND" && get_key("REMEDIATION_LEVEL", @rl) == "ND" && get_key("REPORT_CONFIDENCE", @rc) == "ND"
-	      return true
-	    else
-	      return false
-	    end
-	  end
-	  
 	  def set_key
 	    @key = "AV:%s/AC:%s/Au:%s/C:%s/I:%s/A:%s" % [ get_key("ACCESS_VECTOR", @av),
 	        get_key("ACCESS_COMPLEXITY", @ac),
@@ -115,13 +123,13 @@ module Cvss
 	        get_key("INTEGRITY_IMPACT", @ii),
 	        get_key("AVAILABILITY_IMPACT", @ai)]
 	        
-	    if !notemporal
+	    if !notemporal?
 	      @key += "/E:%s/RL:%s/RC:%s" % [ get_key("EXPLOITABILITY", @ex),
 	          get_key("REMEDIATION_LEVEL", @rl),
 	          get_key("REPORT_CONFIDENCE", @rc)]
 	    end
 	    
-	    if !noenvironmental
+	    if !noenvironmental?
 	      @key += "/CDP:%s/TD:%s/CR:%s/IR:%s/AR:%s" % [ get_key("COLLATERAL_DAMAGE", @cdp),
 	          get_key("TARGET_DISTRIBUTION", @td),
 	          get_key("CONFIDENTIALITY_REQUIREMENT", @cr),
@@ -360,7 +368,7 @@ module Cvss
 	    string = vector.split("/")
 	    len = string.length
 
-	    self.init
+	    init
 
 	    @originalkey = vector
 	    
@@ -379,9 +387,9 @@ module Cvss
 	    printf "Base Score:\t\t\t%3.1f\n", @base
 	    printf "  Impact Subscore:\t\t%3.1f\n", @impact
 	    printf "  Exploitability Subscore:\t%3.1f\n", @exploitability
-	    printf "Temporal Score:\t\t\t%3.1f\n", @temporal if !self.notemporal
-	    printf "Environmental Score:\t\t%3.1f\n", @environmental  if !self.noenvironmental
-	    printf "  Adjusted Impact Score:\t%3.1f\n", @adjimpact if !self.noenvironmental
+	    printf "Temporal Score:\t\t\t%3.1f\n", @temporal if !self.notemporal?
+	    printf "Environmental Score:\t\t%3.1f\n", @environmental  if !self.noenvironmental?
+	    printf "  Adjusted Impact Score:\t%3.1f\n", @adjimpact if !self.noenvironmental?
 	    printf "Overall Score:\t\t\t%3.1f\n", overallscore
 	  end
 	  
@@ -420,8 +428,8 @@ module Cvss
 	  end
 	  
 	  def overallscore
-	    if self.noenvironmental
-	      if self.notemporal
+	    if noenvironmental?
+	      if notemporal?
 	        overallscore = @base
 	      else
 	        overallscore = @temporal
@@ -430,10 +438,6 @@ module Cvss
 	      overallscore = @environmental
 	    end
 	    return overallscore
-	  end
-	  
-	  def impactfunction(impact)
-	  	return impact != 0 ? 1.176 : 0.0
 	  end
 	  
 	  def impactscore

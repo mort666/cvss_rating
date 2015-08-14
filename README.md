@@ -1,5 +1,7 @@
 # Cvss Rating
 
+[![Build Status](https://travis-ci.org/mort666/cvss_rating.svg)](https://travis-ci.org/mort666/cvss_rating)
+
 Implements CVSS Risk Rating version 2.0
 
 ## Installation
@@ -18,7 +20,7 @@ Or install it yourself as:
 
 ## Usage
 
-Check out the unit tests for examples of usage
+Check out the unit tests for examples of usage.
 
 ## TODO
 
