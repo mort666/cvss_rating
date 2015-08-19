@@ -4,7 +4,7 @@ require 'cvss_rating'
 
 class CvssRatingTest < MiniTest::Unit::TestCase
 	def setup
-		@cvss = Cvss::Rating.new
+		@cvss = Cvss2::Rating.new
 		@cvss.av = "N"
 		@cvss.ac = "M"
 		@cvss.au = "N"
@@ -13,7 +13,7 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 		@cvss.ai = "P"
 		@cvss.set_key
 
-		@cvss_2 = Cvss::Rating.new
+		@cvss_2 = Cvss2::Rating.new
 		@cvss_2.av = "L"
 		@cvss_2.ac = "M"
 		@cvss_2.au = "M"
@@ -29,7 +29,7 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 	end
 
 	def test_cvss_rating_from_vector
-		cvss = Cvss::Rating.new
+		cvss = Cvss2::Rating.new
 		cvss.parse("AV:N/AC:M/Au:N/C:P/I:P/A:P")
 		assert_equal @cvss.key, cvss.key
 
@@ -46,7 +46,7 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 	end
 
 	def test_cvss_rating_parameters
-		cvss = Cvss::Rating.new
+		cvss = Cvss2::Rating.new
 
 		cvss.av = "local"
 
@@ -58,7 +58,7 @@ class CvssRatingTest < MiniTest::Unit::TestCase
 	end
 
 	def test_cvss_rating_scores
-		cvss = Cvss::Rating.new
+		cvss = Cvss2::Rating.new
 
 		cvss.scores("N", "M", "N", "P", "P", "P")
 		assert_equal @cvss.key, cvss.key

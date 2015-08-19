@@ -1,6 +1,6 @@
 require "cvss_rating/version"
 
-module Cvss
+module Cvss2
 	class Rating
   
 	  attr_accessor :av, :ac, :au, :ci, :ii, :ai, :ex, :rl, :rc, :cdp, :td, :cr, :ir, :ar 

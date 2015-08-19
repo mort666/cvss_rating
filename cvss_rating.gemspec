@@ -5,7 +5,7 @@ require 'cvss_rating/version'
 
 Gem::Specification.new do |spec|
   spec.name          = "cvss_rating"
-  spec.version       = Cvss::Rating::VERSION
+  spec.version       = Cvss2::Rating::VERSION
   spec.authors       = ["Stephen Kapp"]
   spec.email         = ["mort666@virus.org"]
   spec.summary       = %q{CVSS Risk Rating Calculation and Vector parsing}
