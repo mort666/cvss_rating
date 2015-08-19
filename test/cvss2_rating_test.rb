@@ -1,6 +1,6 @@
 require 'minitest/autorun'
 require 'active_support'
-require 'cvss_rating'
+require 'cvss2_rating'
 
 class CvssRatingTest < MiniTest::Unit::TestCase
 	def setup
