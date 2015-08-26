@@ -16,6 +16,15 @@ class Cvss3RatingTest < MiniTest::Test
 	end
 
 	def test_cvss_rating_from_vector
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:L/UI:R/S:C/C:H/I:L/A:N")
+		assert_equal @cvss.ai, cvss.ai
+
+		assert_equal @cvss.ii, cvss.ii
+
+		assert_equal @cvss.av, cvss.av
+
+		assert_equal @cvss.ui, cvss.ui
 	end
 
 	def test_cvss_rating_parameters

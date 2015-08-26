@@ -24,6 +24,5 @@ Check out the unit tests for examples of usage.
 
 ## TODO
 
-* CVSS 3.0 Support
 * Code and API clean up
 * More Unit Tests
