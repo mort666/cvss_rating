@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'active_support'
 require 'cvss2_rating'
 
-class CvssRatingTest < MiniTest::Unit::TestCase
+class CvssRatingTest < MiniTest::Test
 	def setup
 		@cvss = Cvss2::Rating.new
 		@cvss.av = "N"
