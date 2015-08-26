@@ -13,9 +13,9 @@ module Cvss3Vectors
 	    "rl" => "rl=",
 	    "rc" => "rc=",
 	    "pr" => "pr=",
-	    "td" => "td=",
 	    "cr" => "cr=",
 	    "ir" => "ir=",
+	    "ar" => "ar=",
 	    "mav" => "mav=",
 	    "mac" => "mac=",
 	    "ms" => "ms=",
@@ -38,6 +38,36 @@ module Cvss3Vectors
 	      tmp = section.split(":")
 	      send(VECTORS[tmp[0].downcase].to_sym, tmp[1])     
 	    end
+	end
+
+	def set_key
+		@key = "AV:%s/AC:%s/PR:%s/UI:%s/C:%s/I:%s/A:%s" % [ self.av,
+	        self.ac, self.pr, self.ui, 
+	        self.ci, self.ii, self.ai]
+
+	    @key += "/E:%s" % self.ex if !@ex.nil?
+	    @key += "/RL:%s" % self.rl if !@rl.nil?
+	    @key += "/RC:%s" % self.rc if !@rc.nil?
+
+	    @key += "/CR:%s" % self.cr if !@cr.nil?
+	    @key += "/IR:%s" % self.ir if !@ir.nil?
+	    @key += "/AR:%s" % self.ar if !@ar.nil?
+
+	    @key += "/MAV:%s" % self.mav if !@mav.nil?
+	    @key += "/MAC:%s" % self.mac if !@mac.nil?
+	    @key += "/MPR:%s" % self.mpr if !@mpr.nil?
+	    @key += "/MUI:%s" % self.mui if !@mui.nil?
+	    @key += "/MS:%s" % self.ms if !@ms.nil?
+
+	    @key += "/MC:%s" % self.mc if !@mc.nil?
+	    @key += "/MI:%s" % self.mi if !@mi.nil?
+	    @key += "/MA:%s" % self.ma if !@ma.nil?
+
+	end
+
+	def key
+	  	self.set_key
+	  	return @key
 	end
 
 	def get_key(vector, value)

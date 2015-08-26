@@ -20,7 +20,6 @@ module Cvss3
 	  	REMEDIATION_LEVEL = { :official => 0.95, :temporary => 0.96, :workaround =>  0.97, :unavailable => 1.0, :not_defined => 1.0 }
 	  	
 	  	REPORT_CONFIDENCE = { :unknown => 0.92, :reasonable => 0.96, :confirmed => 1.0, :not_defined => 1.0 }
-
 	  
 	  	# Key Lookup values
 
@@ -49,6 +48,5 @@ module Cvss3
 	  	MODIFIED_SCOPE_KEY = { :changed => 'C', :unchanged => 'U' }
 	  
 	  	MODIFIED_CIA_IMPACT_KEY = { :none => 'N', :low => 'L', :high => 'H' }
-
 	end
 end
