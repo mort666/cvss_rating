@@ -9,7 +9,7 @@ Gem::Specification.new do |spec|
   spec.authors       = ["Stephen Kapp"]
   spec.email         = ["mort666@virus.org"]
   spec.summary       = %q{CVSS Risk Rating Calculation and Vector parsing}
-  spec.description   = %q{CVSS Risk Rating Calculation and Vector parsing, implements CVSS 2.0 rating}
+  spec.description   = %q{CVSS Risk Rating Calculation and Vector parsing, implements CVSS 2.0 & 3.0 rating}
   spec.homepage      = "https://github.com/mort666/cvss_rating"
   spec.license       = "MIT"
 
