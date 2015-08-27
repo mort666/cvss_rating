@@ -5,7 +5,7 @@ require "cvss_rating/cvss3_vectors"
 
 module Cvss3
 	class Rating
-		attr_accessor :exploitability, :base, :impact
+		attr_accessor :exploitability, :base, :impact, :temporal, :environmental
 
 		include Cvss3Vectors
 
@@ -32,6 +32,42 @@ module Cvss3
 	 			else
 	 				nil
 	 			end
+	 	end
+
+	 	def cvss_base_score
+	 		@exploitability = ::Cvss3::Formulas.new.exploitability_sub_score(@av, @ac, @pr, @ui)
+
+			@impact = ::Cvss3::Formulas.new.impact_sub_score_base(@ai, @ci, @ii)	 	
+
+			@base = ::Cvss3::Formulas.new.cvss_base_formula(@impact, @sc, @exploitability)
+
+			@base_level = risk_score(@base)	
+
+			return @base, @base_level
+	 	end
+
+	 	def cvss_temporal_score
+	 		@temporal = ::Cvss3::Formulas.new.cvss_temporal_formula(@base, @ex, @rl, @rc)
+
+	 		@temporal_level = risk_score(@temporal)
+
+	 		return @temporal, @temporal_level
+	 	end
+
+	 	def cvss_environmental_score
+	 		exploitability_sub_score_value_modified = ::Cvss3::Formulas.new.exploitability_sub_score_modified(self.mav(true), 
+	 			self.mac(true), self.mpr(true), self.mui(true))
+
+	 		impact_sub_score_value_modified = ::Cvss3::Formulas.new.impact_sub_score_modified_base(self.ma(true), self.mc(true), 
+	 			self.mi(true), @cr, @ir, @ar)
+
+	 		@environmental = ::Cvss3::Formulas.new.cvss_environmental_formula(impact_sub_score_value_modified, 
+	 			exploitability_sub_score_value_modified,
+	 			@ex, @rl, @rc, self.ms(true))
+
+	 		@environmental_level = risk_score(@environmental)
+
+	 		return @environmental, @environmental_level
 	 	end
 	end
 end

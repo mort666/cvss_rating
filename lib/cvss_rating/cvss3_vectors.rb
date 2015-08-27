@@ -2,6 +2,7 @@ module Cvss3Vectors
 	attr_reader :av, :ac, :ui, :sc, :ci, :ai, :ii, :ex, :rl, :rc, :pr, :td, :cr, :ir
 
 	VECTORS = {
+		"cvss" => "cvss3=",
 	    "av" => "av=",
 	    "ac" => "ac=",
 	    "ui" => "ui=",
@@ -72,6 +73,12 @@ module Cvss3Vectors
 
 	def get_key(vector, value)
 		get_key = eval("::Cvss3::Metrics::" + vector + "_KEY")[(eval("::Cvss3::Metrics::" + vector).select { |k,v| v == value }).keys[0]]
+	end
+
+	def cvss3=(cvss3)
+		if cvss3 != "3.0"
+			raise "Bad CVSS 3.0 Vector String"
+		end
 	end
 
 	def av=(av)
@@ -242,8 +249,12 @@ module Cvss3Vectors
 	    end
 	end
 
-	def mav
-	    mav = get_key("ATTACK_VECTOR", @mav) if !@mav.nil?
+	def mav(raw=false)
+		if raw 
+			@mav ||= @av
+		else
+	    	mav = get_key("ATTACK_VECTOR", @mav) if !@mav.nil?
+	    end
 	end
 
 	def mac=(mac)
@@ -259,8 +270,12 @@ module Cvss3Vectors
 	    end
 	end
 
-	def mac
-	    mac = get_key("ATTACK_COMPLEXITY", @mac) if !@mac.nil?
+	def mac(raw=false)
+		if raw 
+			@mac ||= @ac
+		else
+	   		mac = get_key("ATTACK_COMPLEXITY", @mac) if !@mac.nil?
+	   	end
 	end
 
 	def mui=(mui)
@@ -276,8 +291,12 @@ module Cvss3Vectors
 	    end
 	end
 
-	def mui
-	    mui = get_key("USER_INTERACTION", @mui) if !@mui.nil?
+	def mui(raw=false)
+		if raw 
+			@mui ||= @ui
+		else
+	    	mui = get_key("USER_INTERACTION", @mui) if !@mui.nil?
+	    end
 	end
 
 	def mpr=(mpr)
@@ -295,11 +314,15 @@ module Cvss3Vectors
 	    end
 	end
 
-	def mpr
-		if @ms == "changed"
-			mpr = get_key("PRIVILEGE_REQUIRED_CHANGED", @mpr) if !@mpr.nil?
-	    else
-	    	mpr = get_key("PRIVILEGE_REQUIRED", @mpr) if !@mpr.nil?
+	def mpr(raw=false)
+		if raw 
+			@mpr ||= @pr
+		else
+			if @ms == "changed"
+				mpr = get_key("PRIVILEGE_REQUIRED_CHANGED", @mpr) if !@mpr.nil?
+	    	else
+	    		mpr = get_key("PRIVILEGE_REQUIRED", @mpr) if !@mpr.nil?
+	    	end
 	    end
 	end
 
@@ -316,7 +339,7 @@ module Cvss3Vectors
 	    end
 
 	    if @ms == "changed"
-	    	@mpr = case get_key("PRIVILEGE_REQUIRED", @mpr).nil? ? get_key("PRIVILEGE_REQUIRED_CHANGED", @mpr) : get_key("PRIVILEGE_REQUIRED", @mpr)
+	    	@mpr = case get_key("PRIVILEGE_REQUIRED", self.mpr(true)).nil? ? get_key("PRIVILEGE_REQUIRED_CHANGED", self.mpr(true)) : get_key("PRIVILEGE_REQUIRED", self.mpr(true))
 			when "none", "N",
 				::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:none]
 		    when "low", "L"
@@ -327,12 +350,20 @@ module Cvss3Vectors
 		      raise "Bad Argument"
 		    end
 		else
-			self.mpr = get_key("PRIVILEGE_REQUIRED", @mpr).nil? ? get_key("PRIVILEGE_REQUIRED_CHANGED", @mpr) : get_key("PRIVILEGE_REQUIRED", @mpr)
+			self.mpr = get_key("PRIVILEGE_REQUIRED", self.mpr(true)).nil? ? get_key("PRIVILEGE_REQUIRED_CHANGED", self.mpr(true)) : get_key("PRIVILEGE_REQUIRED", self.mpr(true))
 		end
 	end
 
-	def ms
-	    ms = ::Cvss3::Metrics::SCOPE_KEY[@ms.to_sym] if !@ms.nil?
+	def ms(raw=false)
+		if raw
+			@ms ||= @sc
+		else
+			if @ms.nil?
+				ms = ::Cvss3::Metrics::SCOPE_KEY[@sc.to_sym] if !@sc.nil?
+			else
+				ms = ::Cvss3::Metrics::SCOPE_KEY[@ms.to_sym] if !@ms.nil?
+			end
+		end	
 	end	
 
 	def mc=(mc)
@@ -350,8 +381,12 @@ module Cvss3Vectors
 	    end
 	end
 
-	def mc
-	    mc = get_key("CIA_IMPACT", @mc) if !@mc.nil?
+	def mc(raw=false)
+		if raw 
+			@mv ||= @ci
+		else
+	    	mc = get_key("CIA_IMPACT", @mc) if !@mc.nil?
+	    end
 	end
 
 	def mi=(mi)
@@ -369,8 +404,12 @@ module Cvss3Vectors
 	    end
 	end
 
-	def mi
-	    mi = get_key("CIA_IMPACT", @mi) if !@mi.nil?
+	def mi(raw=false)
+		if raw 
+			@mi ||= @ii
+		else
+	    	mi = get_key("CIA_IMPACT", @mi) if !@mi.nil?
+	    end
 	end
 
 	def ma=(ma)
@@ -388,8 +427,12 @@ module Cvss3Vectors
 	    end
 	end
 
-	def ma
-	    am = get_key("CIA_IMPACT", @ma) if !@ma.nil?
+	def ma(raw=false)
+		if raw 
+			@ma ||= @ai
+		else
+	    	ma = get_key("CIA_IMPACT", @ma) if !@ma.nil?
+	    end
 	end
 
 	def ex=(ex)
@@ -398,7 +441,7 @@ module Cvss3Vectors
 		when "proof-of-concept", "P", "POC" then ::Cvss3::Metrics::EXPLOITABILITY[:poc]
 		when "functional", "F" then ::Cvss3::Metrics::EXPLOITABILITY[:functional]
 		when "high", "H" then ::Cvss3::Metrics::EXPLOITABILITY[:high]      
-		when "not defined", "ND" then ::Cvss3::Metrics::EXPLOITABILITY[:not_defined]
+		when "not defined", "ND", "X" then ::Cvss3::Metrics::EXPLOITABILITY[:not_defined]
 		else 
 		  raise "Bad Argument"
 		end
@@ -414,7 +457,7 @@ module Cvss3Vectors
 		when "temporary-fix", "T", "TF" then ::Cvss3::Metrics::REMEDIATION_LEVEL[:temporary]
 		when "workaround", "W" then ::Cvss3::Metrics::REMEDIATION_LEVEL[:workaround]
 		when "unavailable", "U" then ::Cvss3::Metrics::REMEDIATION_LEVEL[:unavailable]      
-		when "not defined", "ND" then ::Cvss3::Metrics::REMEDIATION_LEVEL[:not_defined]
+		when "not defined", "ND", "X" then ::Cvss3::Metrics::REMEDIATION_LEVEL[:not_defined]
 		else 
 		  raise "Bad Argument"
 		end
@@ -429,7 +472,7 @@ module Cvss3Vectors
 		when "unknown", "U" then ::Cvss3::Metrics::REPORT_CONFIDENCE[:unknown]
 		when "reasonable", "R" then ::Cvss3::Metrics::REPORT_CONFIDENCE[:reasonable]
 		when "confirmed", "C" then ::Cvss3::Metrics::REPORT_CONFIDENCE[:confirmed]    
-		when "not defined", "ND" then ::Cvss3::Metrics::REPORT_CONFIDENCE[:not_defined]
+		when "not defined", "ND", "X" then ::Cvss3::Metrics::REPORT_CONFIDENCE[:not_defined]
 		else 
 		  raise "Bad Argument"
 		end
@@ -444,7 +487,7 @@ module Cvss3Vectors
 	    when "low", "L" then ::Cvss3::Metrics::CIA_REQUIREMENT[:low]
 	    when "medium", "M" then ::Cvss3::Metrics::CIA_REQUIREMENT[:medium]
 	    when "high", "H" then ::Cvss3::Metrics::CIA_REQUIREMENT[:high]      
-	    when "not defined", "ND" then ::Cvss3::Metrics::CIA_REQUIREMENT[:notdefined]
+	    when "not defined", "ND", "X" then ::Cvss3::Metrics::CIA_REQUIREMENT[:not_defined]
 	    else 
 	      raise "Bad Argument"
 	    end
@@ -459,7 +502,7 @@ module Cvss3Vectors
 	    when "low", "L" then ::Cvss3::Metrics::CIA_REQUIREMENT[:low]
 	    when "medium", "M" then ::Cvss3::Metrics::CIA_REQUIREMENT[:medium]
 	    when "high", "H" then ::Cvss3::Metrics::CIA_REQUIREMENT[:high]      
-	    when "not defined", "ND" then ::Cvss3::Metrics::CIA_REQUIREMENT[:notdefined]
+	    when "not defined", "ND", "X" then ::Cvss3::Metrics::CIA_REQUIREMENT[:not_defined]
 	    else 
 	      raise "Bad Argument"
 	    end
@@ -474,7 +517,7 @@ module Cvss3Vectors
 	    when "low", "L" then ::Cvss3::Metrics::CIA_REQUIREMENT[:low]
 	    when "medium", "M" then ::Cvss3::Metrics::CIA_REQUIREMENT[:medium]
 	    when "high", "H" then ::Cvss3::Metrics::CIA_REQUIREMENT[:high]      
-	    when "not defined", "ND" then ::Cvss3::Metrics::CIA_REQUIREMENT[:notdefined]
+	    when "not defined", "ND", "X" then ::Cvss3::Metrics::CIA_REQUIREMENT[:not_defined]
 	    else 
 	      raise "Bad Argument"
 	    end

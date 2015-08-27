@@ -1,7 +1,7 @@
 module Cvss3
 	class Metrics
 		# Base Metrics
-		ATTACK_VECTOR = { :physical => 0.55, :local => 0.55, :adjacent_network => 0.62, :network => 0.85, :not_defined => 0.85 }
+		ATTACK_VECTOR = { :physical => 0.2, :local => 0.55, :adjacent_network => 0.62, :network => 0.85, :not_defined => 0.85 }
 	  	ATTACK_COMPLEXITY = { :high => 0.44, :low => 0.77, :not_defined => 0.77 }
 	  	
 	  	PRIVILEGE_REQUIRED = { :not_defined => 0.85, :none => 0.85, :low => 0.62, :high => 0.27 }

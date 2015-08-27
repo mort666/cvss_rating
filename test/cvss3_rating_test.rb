@@ -57,6 +57,22 @@ class Cvss3RatingTest < MiniTest::Test
 		assert_equal @cvss_2.key, cvss.key
 	end
 
+	def test_valid_vector
+		cvss = Cvss3::Rating.new
+
+		err = assert_raises RuntimeError do
+			cvss.parse("AV:P/AC:H/PR:L/UI:R/S:U/C:H/I:X/A:N")
+		end
+
+		assert_match /Bad Argument/, err.message
+
+		err = assert_raises RuntimeError do
+			cvss.parse("CVSS:9.9/AV:P/AC:H/PR:L/UI:R/S:U/C:H/I:L/A:N")
+		end
+
+		assert_match /Bad CVSS 3.0 Vector String/, err.message
+	end
+
 	def test_cvss_rating_parameters
 		cvss = Cvss3::Rating.new
 
@@ -93,4 +109,127 @@ class Cvss3RatingTest < MiniTest::Test
 		
 		assert_equal nil, cvss.risk_score(11.0)
 	end
+
+	def test_base_score
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:L/UI:R/S:U/C:H/I:N/A:N")
+
+		score = cvss.cvss_base_score
+
+		assert_equal 3.9, score[0]
+
+		assert_equal "Low", score[1]
+
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:H/UI:R/S:C/C:H/I:L/A:N/E:U/RL:O/RC:U/CR:L/IR:L/AR:L")
+
+		score = cvss.cvss_base_score
+
+		assert_equal 5.4, score[0]
+
+		assert_equal "Medium", score[1]
+
+	end
+
+	def test_temporal_score
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:L/UI:R/S:U/C:H/I:N/A:N")
+
+		cvss.cvss_base_score
+
+		score = cvss.cvss_temporal_score
+
+		assert_equal 3.9, score[0]
+
+		assert_equal "Low", score[1]
+
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:H/UI:R/S:C/C:H/I:L/A:N/E:U/RL:O/RC:U/CR:L/IR:L/AR:L")
+
+		cvss.cvss_base_score
+		
+		score = cvss.cvss_temporal_score
+
+		assert_equal 4.3, score[0]
+
+		assert_equal "Medium", score[1]
+	end
+
+	def test_environmental_score
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:L/UI:R/S:U/C:H/I:N/A:N")
+
+		cvss.cvss_base_score
+
+		score = cvss.cvss_environmental_score
+
+		assert_equal 3.9, score[0]
+
+		assert_equal "Low", score[1]
+
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:H/UI:R/S:C/C:H/I:L/A:N/E:U/RL:O/RC:U/CR:L/IR:L/AR:L")
+
+		cvss.cvss_base_score
+		
+		score = cvss.cvss_environmental_score
+
+		assert_equal 2.4, score[0]
+
+		assert_equal "Low", score[1]
+
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:H/UI:R/S:C/C:H/I:L/A:N/E:U/RL:O/RC:U/IR:L/AR:L/MAV:A/MPR:N")
+
+		cvss.cvss_base_score
+		
+		score = cvss.cvss_environmental_score
+
+		assert_equal 4.8, score[0]
+
+		assert_equal "Medium", score[1]
+
+		cvss = Cvss3::Rating.new
+		cvss.parse("CVSS:3.0/AV:P/AC:H/PR:H/UI:R/S:C/C:H/I:L/A:N/E:U/RL:O/RC:U/MAV:N/MS:U")
+
+		cvss.cvss_base_score
+		
+		score = cvss.cvss_environmental_score
+
+		assert_equal 3.9, score[0]
+
+		assert_equal "Low", score[1]
+	end
+
+	def test_all_scores
+		cvss = Cvss3::Rating.new
+		cvss.parse("AV:P/AC:H/PR:H/UI:R/S:U/C:N/I:N/A:N/E:X/RL:X/RC:X")
+
+		score = cvss.cvss_base_score
+
+		assert_equal 0.0, score[0]
+
+		score = cvss.cvss_temporal_score
+
+		assert_equal 0.0, score[0]
+
+		score = cvss.cvss_environmental_score
+
+		assert_equal 0.0, score[0]
+
+		cvss.parse("AV:L/AC:L/PR:H/UI:R/S:U/C:H/I:N/A:H/E:H/RL:W/RC:U/CR:H/IR:H/AR:M/MAV:L/MAC:L/MPR:H/MUI:N/MS:C/MC:N/MI:H/MA:L")
+
+		score = cvss.cvss_base_score
+
+		assert_equal 5.8, score[0]
+
+		score = cvss.cvss_temporal_score
+
+		assert_equal 5.2, score[0]
+
+		score = cvss.cvss_environmental_score
+
+		assert_equal 7.4, score[0]
+	end
+
 end
