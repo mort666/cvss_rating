@@ -1,5 +1,5 @@
 module Cvss3Vectors
-	attr_reader :av, :ac, :ui, :sc, :ci, :ai, :ii, :ex, :rl, :rc, :pr, :td, :cr, :ir
+	attr_reader :av, :ac, :ui, :sc, :ci, :ai, :ii, :ex, :rl, :rc, :pr, :ar, :cr, :ir
 
 	VECTORS = {
 		"cvss" => "cvss3=",

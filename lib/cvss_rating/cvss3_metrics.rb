@@ -33,20 +33,20 @@ module Cvss3
 	  
 	  	CIA_IMPACT_KEY = { :none => 'N', :low => 'L', :high => 'H' }
 	  
-	  	CIA_REQUIREMENT_KEY = { :low => 'L', :medium => 'M', :high => 'H', :notdefined => 'ND' }
+	  	CIA_REQUIREMENT_KEY = { :low => 'L', :medium => 'M', :high => 'H', :not_defined => 'X' }
 	  
-	  	EXPLOITABILITY_KEY = { :unproven => 'U', :poc => 'P', :functional => 'F', :high => 'H', :not_defined => 'ND' }
-	  	REMEDIATION_LEVEL_KEY = { :official => 'O', :temporary => "T", :workaround =>  'W', :unavailable => 'U', :not_defined => 'ND' }
-	  	REPORT_CONFIDENCE_KEY = { :unknown => 'U', :reasonable => 'R', :confirmed => 'C', :not_defined => 'ND' }
+	  	EXPLOITABILITY_KEY = { :unproven => 'U', :poc => 'P', :functional => 'F', :high => 'H', :not_defined => 'X' }
+	  	REMEDIATION_LEVEL_KEY = { :official => 'O', :temporary => "T", :workaround =>  'W', :unavailable => 'U', :not_defined => 'X' }
+	  	REPORT_CONFIDENCE_KEY = { :unknown => 'U', :reasonable => 'R', :confirmed => 'C', :not_defined => 'X' }
 
-	  	MODIFIED_ATTACK_VECTOR_KEY = { :physical => 'P', :local => 'L', :adjacent_network => 'A', :network => 'N' }
-	  	MODIFIED_ATTACK_COMPLEXITY_KEY = { :high => 'H', :low => 'L' }
+	  	MODIFIED_ATTACK_VECTOR_KEY = { :physical => 'P', :local => 'L', :adjacent_network => 'A', :network => 'N', :not_defined => 'X' }
+	  	MODIFIED_ATTACK_COMPLEXITY_KEY = { :high => 'H', :low => 'L', :not_defined => 'X'}
 	  	MODIFIED_PRIVILEGE_REQUIRED_KEY = { :none => 'N', :low => 'L', :high => 'H' }
-	  	MODIFIED_PRIVILEGE_REQUIRED_CHANGED_KEY = { :none => 'N', :low => 'L', :high => 'H' }
-	  	MODIFIED_USER_INTERACTION_KEY = { :none => 'N', :required => 'R' }
+	  	MODIFIED_PRIVILEGE_REQUIRED_CHANGED_KEY = { :none => 'N', :low => 'L', :high => 'H', :not_defined => 'X' }
+	  	MODIFIED_USER_INTERACTION_KEY = { :none => 'N', :required => 'R', :not_defined => 'X' }
 
-	  	MODIFIED_SCOPE_KEY = { :changed => 'C', :unchanged => 'U' }
+	  	MODIFIED_SCOPE_KEY = { :changed => 'C', :unchanged => 'U', :not_defined => 'X' }
 	  
-	  	MODIFIED_CIA_IMPACT_KEY = { :none => 'N', :low => 'L', :high => 'H' }
+	  	MODIFIED_CIA_IMPACT_KEY = { :none => 'N', :low => 'L', :high => 'H', :not_defined => 'X' }
 	end
 end
