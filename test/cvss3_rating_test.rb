@@ -215,7 +215,7 @@ class Cvss3RatingTest < MiniTest::Test
 
 		assert_equal "N", cvss.ui
 
-		assert_equal "X", cvss.rl
+		assert_equal "U", cvss.rl
 
 	end
 

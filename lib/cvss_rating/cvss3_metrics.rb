@@ -1,13 +1,13 @@
 module Cvss3
 	class Metrics
 		# Base Metrics
-		ATTACK_VECTOR = { :physical => 0.2, :local => 0.55, :adjacent_network => 0.62, :network => 0.85, :not_defined => 0.85 }
-	  	ATTACK_COMPLEXITY = { :high => 0.44, :low => 0.77, :not_defined => 0.77 }
+		ATTACK_VECTOR = { :physical => 0.2, :local => 0.55, :adjacent_network => 0.62, :network => 0.85 }
+	  	ATTACK_COMPLEXITY = { :high => 0.44, :low => 0.77 }
 
-	  	PRIVILEGE_REQUIRED = { :not_defined => 0.85, :none => 0.85, :low => 0.62, :high => 0.27 }
-	  	PRIVILEGE_REQUIRED_CHANGED = { :not_defined => 0.85, :none => 0.85, :low => 0.68, :high => 0.50 }
+	  	PRIVILEGE_REQUIRED = { :none => 0.85, :low => 0.62, :high => 0.27 }
+	  	PRIVILEGE_REQUIRED_CHANGED = { :none => 0.85, :low => 0.68, :high => 0.50 }
 
-	  	USER_INTERACTION = {:not_defined => 0.85, :none => 0.85, :required => 0.62 }
+	  	USER_INTERACTION = {:none => 0.85, :required => 0.62 }
 
 	  	CIA_IMPACT = { :none => 0.0, :low => 0.22, :high => 0.56, :not_defined => 0.56 }
 
