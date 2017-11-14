@@ -1,6 +1,7 @@
 # @author Stephen Kapp
 
 require "cvss_rating/version"
+require "cvss_rating/float"
 require "cvss_rating/cvss3_formulas"
 require "cvss_rating/cvss3_metrics"
 require "cvss_rating/cvss3_vectors"
@@ -17,7 +18,7 @@ module Cvss3
 		# @param list [Hash] list of CVSS 3.0 attributes to be used during initialization
 		#
 
-		def initialize(attributes = {})   
+		def initialize(attributes = {})
 			init
 
 	    	attributes.each do |name, value|
@@ -25,7 +26,7 @@ module Cvss3
 	    	end
 	 	end
 
-	 	
+
 	 	#
 	 	# Takes score and determines risk level from None to Critical
 	 	#
@@ -49,20 +50,22 @@ module Cvss3
 	 			end
 	 	end
 
-	 
+
 	 	#
 	 	# Calculate the CVSS 3.0 Base Score
 	 	#
 	 	# @return [Array] the CVSS 3.0 Base score with its risk level
 
 	 	def cvss_base_score
+			byebug if @pr.nil?
+			
 	 		@exploitability = ::Cvss3::Formulas.new.exploitability_sub_score(@av, @ac, @pr, @ui)
 
-			@impact = ::Cvss3::Formulas.new.impact_sub_score_base(@ai, @ci, @ii)	 	
+			@impact = ::Cvss3::Formulas.new.impact_sub_score_base(@ai, @ci, @ii)
 
 			@base = ::Cvss3::Formulas.new.cvss_base_formula(@impact, @sc, @exploitability)
 
-			@base_level = risk_score(@base)	
+			@base_level = risk_score(@base)
 
 			return @base, @base_level
 	 	end
@@ -88,13 +91,13 @@ module Cvss3
 	 	# @return [Array] the CVSS 3.0 Temporal score with its risk level
 
 	 	def cvss_environmental_score
-	 		exploitability_sub_score_value_modified = ::Cvss3::Formulas.new.exploitability_sub_score_modified(self.mav(true), 
+	 		exploitability_sub_score_value_modified = ::Cvss3::Formulas.new.exploitability_sub_score_modified(self.mav(true),
 	 			self.mac(true), self.mpr(true), self.mui(true))
 
-	 		impact_sub_score_value_modified = ::Cvss3::Formulas.new.impact_sub_score_modified_base(self.ma(true), self.mc(true), 
+	 		impact_sub_score_value_modified = ::Cvss3::Formulas.new.impact_sub_score_modified_base(self.ma(true), self.mc(true),
 	 			self.mi(true), @cr, @ir, @ar)
 
-	 		@environmental = ::Cvss3::Formulas.new.cvss_environmental_formula(impact_sub_score_value_modified, 
+	 		@environmental = ::Cvss3::Formulas.new.cvss_environmental_formula(impact_sub_score_value_modified,
 	 			exploitability_sub_score_value_modified,
 	 			@ex, @rl, @rc, self.ms(true))
 

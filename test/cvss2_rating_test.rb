@@ -12,6 +12,7 @@ class CvssRatingTest < MiniTest::Test
 		@cvss.ii = "P"
 		@cvss.ai = "P"
 		@cvss.set_key
+		@cvss.calculate
 
 		@cvss_2 = Cvss2::Rating.new
 		@cvss_2.av = "L"
@@ -26,11 +27,14 @@ class CvssRatingTest < MiniTest::Test
 		@cvss_2.ir = "M"
 		@cvss_2.ar = "M"
 		@cvss_2.set_key
+		@cvss_2.calculate
 	end
 
 	def test_cvss_rating_from_vector
 		cvss = Cvss2::Rating.new
 		cvss.parse("AV:N/AC:M/Au:N/C:P/I:P/A:P")
+		cvss.calculate
+
 		assert_equal @cvss.key, cvss.key
 
 		assert_equal @cvss.base, cvss.base
@@ -38,6 +42,7 @@ class CvssRatingTest < MiniTest::Test
 		assert_equal @cvss.overallscore, cvss.overallscore
 
 		cvss.parse("AV:L/AC:M/Au:M/C:P/I:C/A:C/CDP:L/TD:H/CR:M/IR:M/AR:M")
+		cvss.calculate
 		assert_equal @cvss_2.key, cvss.key
 
 		assert_equal @cvss_2.base, cvss.base
