@@ -64,12 +64,12 @@ module Cvss3
 
       if scope_value_modified == 'unchanged'
         impact_value_modified = IMPACT_COEFFICIENT * impact_sub_score_value_modified
-        temp_score = min(10, impact_value_modified + exploitability_sub_score_value_modified)
+        temp_score = min(10.0, impact_value_modified + exploitability_sub_score_value_modified)
         temp_score2 = temp_score.ceil2(1)
         temp_score3 = temp_score2 * exploit_code_maturity_value * remediation_level_value * report_confidence_value
       elsif scope_value_modified == 'changed'
         impact_value_modified = IMPACT_MOD_COEFFICIENT * (impact_sub_score_value_modified - 0.029) - 3.25 * ((impact_sub_score_value_modified - 0.02)**15)
-        temp_score = min(10, 1.08 * (impact_value_modified + exploitability_sub_score_value_modified))
+        temp_score = min(10.0, 1.08 * (impact_value_modified + exploitability_sub_score_value_modified))
         temp_score2 = temp_score.ceil2(1)
         temp_score3 = temp_score2 * exploit_code_maturity_value * remediation_level_value * report_confidence_value
         end
