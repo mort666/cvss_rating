@@ -1,5 +1,5 @@
 module Cvss2
 	class Rating
-		VERSION = "0.5.7"
+		VERSION = "0.6.0"
   end
 end

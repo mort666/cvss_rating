@@ -140,6 +140,15 @@ module Cvss3Vectors
 
   def pr
     if @sc == 'changed'
+      tmp = case get_key('PRIVILEGE_REQUIRED', @pr).nil? ? get_key('PRIVILEGE_REQUIRED_CHANGED', @pr) : get_key('PRIVILEGE_REQUIRED', @pr)
+            when 'none', 'N',
+              ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:none]
+            when 'low', 'L'
+              ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:low]
+            when 'high', 'H'
+              ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:high]
+            end
+      @pr = tmp unless tmp.nil?
       pr = get_key('PRIVILEGE_REQUIRED_CHANGED', @pr) unless @pr.nil?
     else
       pr = get_key('PRIVILEGE_REQUIRED', @pr) unless @pr.nil?
@@ -164,8 +173,8 @@ module Cvss3Vectors
               ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:low]
             when 'high', 'H'
               ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:high]
-			@pr = tmp unless tmp.nil?
-      end
+            end
+      @pr = tmp unless tmp.nil?
     else
       self.pr = get_key('PRIVILEGE_REQUIRED', @pr).nil? ? get_key('PRIVILEGE_REQUIRED_CHANGED', @pr) : get_key('PRIVILEGE_REQUIRED', @pr)
      end
@@ -335,7 +344,7 @@ module Cvss3Vectors
     if @ms == 'changed'
       @mpr = case get_key('PRIVILEGE_REQUIRED', mpr(true)).nil? ? get_key('PRIVILEGE_REQUIRED_CHANGED', mpr(true)) : get_key('PRIVILEGE_REQUIRED', mpr(true))
              when 'none', 'N',
-      ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:none]
+               ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:none]
              when 'low', 'L'
                ::Cvss3::Metrics::PRIVILEGE_REQUIRED_CHANGED[:low]
              when 'high', 'H'

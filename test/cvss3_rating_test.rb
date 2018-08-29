@@ -208,16 +208,27 @@ class Cvss3RatingTest < MiniTest::Test
 
 		score = cvss.cvss_base_score
 
-		assert_equal 7.7, score[0]
+		assert_equal 10, score[0]
 
-		assert_equal "High", score[1]
+		assert_equal "Critical", score[1]
 
-		assert_equal "U", cvss.ex
+		assert_equal "H", cvss.ex
 
 		assert_equal "N", cvss.ui
 
 		assert_equal "U", cvss.rl
 
+
+		cvss = Cvss3::Rating.new
+		cvss.parse('AV:N/AC:L/PR:H/UI:N/S:C/C:H/I:H/A:H')
+
+		score = cvss.cvss_base_score
+
+		assert_equal 9.1, score[0]
+
+		assert_equal "Critical", score[1]
+
+		assert_equal "H", cvss.pr
 	end
 
 

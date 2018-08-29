@@ -1,6 +1,6 @@
 # Cvss Rating
 
-[![Build Status](https://travis-ci.org/mort666/cvss_rating.svg)](https://travis-ci.org/mort666/cvss_rating)
+[![CircleCI](https://circleci.com/gh/mort666/cvss_rating.svg?style=svg)](https://circleci.com/gh/mort666/cvss_rating)
 
 Implements vulnerability scoring system CVSS versions 2.0 and 3.0.
 
@@ -26,10 +26,10 @@ The following is basic usage to handle a CVSS 2.0 vector:
 
 	cvs = Cvss2::Rating.new
 	cvss.parse("AV:N/AC:M/Au:N/C:P/I:P/A:P")
-	
+
 	# Calculate overallscore
 	cvss.overallscore
-	
+
 The following is basic usage to handle a CVSS 3.0 vector:
 
 	cvss = Cvss3::Rating.new
@@ -37,10 +37,10 @@ The following is basic usage to handle a CVSS 3.0 vector:
 
 	# Calculate Base Score (returns array of score and risk level)
 	cvss.cvss_base_score
-	
+
 	# Calculate Temporal Score (returns array of score and risk level)
 	cvss.cvss_temporal_score
-	
+
 	# Calculate Environmental Score (returns array of score and risk level)
 	cvss.cvss_environmental_score
 
